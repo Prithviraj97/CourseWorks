@@ -1,0 +1,6 @@
+Alosdur,3456,1867
+Desmeni,598,1951
+Frankmer,1898,1965
+Gummiberg,537,1965
+New Morris,1098,1912
+Postimi,2605,1902

@@ -1,0 +1,7 @@
+Alosdur,Desmeni,4.8
+Alosdur,Postimi,6.8
+Desmeni,Gummiberg,3.9
+Gummiberg,New Morris,5.4
+New Morris,Postimi,5.3
+Frankmer,New Morris,6.3
+Frankmer,Postimi,6.2
