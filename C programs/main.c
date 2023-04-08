@@ -1,125 +1,60 @@
-/* 
- * File:   Lab 6 solution  starter code
- * Author: C Anderson
- *
- * Created on April 4, 2018, 3:10 AM
- */
+/*Author :      Jeevin Maharaj
+                Prithvi Raj Singh
+                Rajib Rijal*/
+//Date:         11/06/2019
+//Program:      CS417Part1.c
+//Instructor:   Dr. Vipin Menon
+//Theme:        To build program that will use user feedback to decipher the cipher text.
+//Objective: i) To use the character function <c.type> to perform ciphering and deciphering.
+//          ii) To be able to successfully deciphering the cipher text using the function we have created.
+//         iii) To use the ceaser cipher function to perform deciphering.
 
-/*Name: Prithvi Raj Singh
- Date: 04/22/2018
- This program will read the data from the given file and will be loading inventory to array of structure.
- This program will print out the items available in inventory in organized way */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#define MAX_STRING_LENGTH 20
 
-#define NUM_IDS 20
-#define NUM_SIZES 5
+void caesar_cipher(char s1[], char s2[], int key);
+char s[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-int ids[NUM_IDS] = {317,325,355,376,377,380,387,398,420,430,432,437,441,444,458,459,471,479,481,496};
-char sizes[NUM_SIZES][8] = {"petite", "small", "medium", "large", "X-large"};
-
-int getSizeIndex(char size[]);
-int getIDIndex(int id);
+int main(int argc, char** argv) {
     
-struct item {
-    char type[7];
-    char color[6];
-    double price;
-    int amount;
-};
+    int key = 1;             //Key to perform the deciphering. 
+    int we_are_done = 0;    
+    char s1[MAX_STRING_LENGTH];
+    char s2[MAX_STRING_LENGTH];
+    
+    printf("\n Please enter cipher text: ");
+    scanf("%s", s1);
+    
+    while((we_are_done == 0) && (key <= 25))  
+    {
+        caesar_cipher(s1, s2, key);
+        printf("\n The plain text is: %s", s2);
+        printf("\n Is this plain text correct ? 1 for yes, 0 for no: ");
+        scanf("%d", &we_are_done);
+        key = key + 1;
+    }
+    printf("\n Cipher text = %s, Plain text = %s", s1, s2);
 
-
-int main(void)
-{
-	// 1. Declare variables, including array of structures
-	char tempType[7];
-	char tempColor[6];
-	char tempSize[10];
-	double tempPrice;
-	int tempAmount, tempID, ID_index, sizeIndex, rows, col;
-	struct item description[NUM_IDS][NUM_SIZES];
-
-	// 2. Open and test file connection
-	FILE* dataStream;							
-	dataStream = fopen("Lab6_data.dat", "r");
-	if (dataStream == NULL)
-		printf("Trouble reading the file.");
-
-	// 3. Initialize all amount members in array of structures to zero
-	for (rows = 0; rows < NUM_IDS; rows++)		
-		for (col = 0; col < NUM_SIZES; col++)
-			description[rows][col].amount = 0;
-
-	// 4. Read data from file and store in proper element of the array.
-	while (fscanf(dataStream, "%d %s %s %s %lf %d", &tempID, tempSize, tempType, tempColor, &tempPrice, &tempAmount) != EOF) 
-	{
-		ID_index = getIDIndex(tempID);
-                
-                
-		sizeIndex = getSizeIndex(tempSize);
-                
-
-		for (col = 0; col < NUM_SIZES; col++)  
-		{
-			strcpy(description[ID_index][col].type, tempType);
-		}
-		strcpy(description[ID_index][sizeIndex].color, tempColor);
-		description[ID_index][sizeIndex].price = tempPrice;
-		description[ID_index][sizeIndex].amount = tempAmount;
-
-		//printf("%d %d %s %s %.2lf %d\n", tempID, sizeIndex, description[ID_index][sizeIndex].type, description[ID_index][sizeIndex].color, description[ID_index][sizeIndex].price, description[ID_index][sizeIndex].amount);
-	}
-    fclose(dataStream);
-
-	// 5. Print out the inventory table
-	printf("This program will read the file lab6_data.dat and display it in good tabular form\n.The user won't have to input anything\n");
-	printf("***************************************************************************************************\n");
-	printf("                         Clearance items available\n");
-	printf("***************************************************************************************************\n");
-	printf(" ID   type    ");
-	for (col = 0; col < NUM_SIZES; col++)
-		printf("     %s     ", sizes[col]);
-	printf("\n");
-	printf("***************************************************************************************************\n");
-
-	for (rows = 0; rows < NUM_IDS; rows++)
-	{
-		printf("%d ", ids[rows]);
-		printf("%7s   ", description[rows][0].type); 
-		for (col = 0; col < NUM_SIZES; col++)
-		{
-			if (description[rows][col].amount == 0) 
-				printf("      N.A.      ");
-			else
-			{
-				printf("%6s $%6.2lf  ", description[rows][col].color, description[rows][col].price); 
-			}
-		}
-		printf("\n");
-	}
-	printf("***************************************************************************************************\n");
-	
-   
-	printf("\n The program is ending. Thank you!!\n");
-	return 0;
+    return (EXIT_SUCCESS);
 }
 
-int getSizeIndex(char size[])
+void caesar_cipher(char s1[], char s2[], int key)
 {
-	int counter;
-	for (counter = 0; counter < NUM_SIZES; counter++)
-		if (strcmp(sizes[counter], size) == 0)
-			break;
-	return counter;
+    int i;
+    int index;
+    int length = strlen(s1);
+    
+    for(i = 0; i <= length-1; i++)
+    {
+        index = s1[i] - 65;
+        index = index + key;
+        index = index % 26;
+        s2[i] = s[index];
+    }
+    s2[i] = '\0';
 }
 
-int getIDIndex(int id)
-{
-	int counter;
-	for (counter = 0; counter < NUM_IDS; counter++)
-		if (ids[counter] == id)
-			break;
-	return counter;
-}
